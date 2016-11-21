@@ -1,5 +1,5 @@
 " Read user configuration variables
-let s:keys_to_map = get(g:, 'rime_im_keys_to_map', split('abcdefghijklmnopqrstuvwxyz,.\', '\zs'))
+let s:keys_to_map = get(g:, 'rime_im_keys_to_map', split('!"#$%&''()*+,-./:;<=>?@[\]^_`abcdefghijklmnopqrstuvwxyz{|}~', '\zs'))
 let s:rime_cli_prog = get(g:, 'rime_im_rime_cli_prog', 'rime-cli')
 
 let s:saved_mappings = {}
@@ -75,7 +75,7 @@ endfunction
 function! s:do_mapping(mode, lhs, rhs, ...) abort
     let l:args = a:0 >= 1 ? a:1 : ''
     let s:saved_mappings[bufnr('')][a:mode . a:lhs] = maparg(a:lhs, a:mode, 0, 1)
-    execute a:mode . 'noremap <buffer> ' . l:args . ' ' . a:lhs . ' ' . a:rhs
+    execute a:mode . 'noremap <buffer> ' . l:args . ' ' . escape(a:lhs, '|') . ' ' . escape(a:rhs, '|')
 endfunction
 
 function! s:restore_mapping(mode, lhs) abort
@@ -88,10 +88,10 @@ function! s:restore_mapping(mode, lhs) abort
                     \ (l:old_mapping.nowait ? ' <nowait>' : '') .
                     \ (l:old_mapping.silent ? ' <silent>' : '') .
                     \ (l:old_mapping.expr ? ' <expr>' : '') .
-                    \ l:old_mapping.lhs . ' ' .
-                    \ substitute(l:old_mapping.rhs, '\c<SID>', '<SNR>' . l:old_mapping.sid . '_', 'g')
+                    \ escape(l:old_mapping.lhs, '|') . ' ' .
+                    \ substitute(escape(l:old_mapping.rhs, '|'), '\c<SID>', '<SNR>' . l:old_mapping.sid . '_', 'g')
     else
-        execute a:mode . 'unmap <buffer> ' . a:lhs
+        execute a:mode . 'unmap <buffer> ' . escape(a:lhs, '|')
     endif
     unlet s:saved_mappings[bufnr('')][a:mode . a:lhs]
 endfunction

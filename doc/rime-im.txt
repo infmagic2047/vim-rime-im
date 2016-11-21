@@ -20,9 +20,9 @@ interaction with RIME.
 USAGE                                                          *rime-im-usage*
 
 By default, <C-Space> is used to toggle the input method for current buffer.
-When the input method is enabled, typing any letter or some specific symbols
-will start RIME to input a phrase (see |g:rime_im_keys_to_map| for more
-details). Then all characters are sent to RIME until finishing this phrase.
+When the input method is enabled, typing any letter or symbol will start RIME
+to input a phrase (see |g:rime_im_keys_to_map| for more details). Then all
+characters are sent to RIME until finishing this phrase.
 
 ------------------------------------------------------------------------------
 MAPPINGS                                                    *rime-im-mappings*
@@ -49,7 +49,8 @@ g:rime_im_create_default_mappings          *g:rime_im_create_default_mappings*
 g:rime_im_keys_to_map                                  *g:rime_im_keys_to_map*
     A list of characters to be captured. Typing any of these characters in
     insert mode starts RIME to input a phrase.
-    Default: all lower-case letters and characters in ',.\'
+    Default: all printable ASCII characters other than space, digits and
+    uppercase letters
 
 g:rime_im_rime_cli_prog                              *g:rime_im_rime_cli_prog*
     The rime-cli executable file.
