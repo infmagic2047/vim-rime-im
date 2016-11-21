@@ -1,0 +1,59 @@
+*rime-im.txt*  Use Rime Input Method Engine in vim
+
+==============================================================================
+CONTENTS                                                             *rime-im*
+
+1. Description                                           |rime-im-description|
+2. Usage                                                       |rime-im-usage|
+    2.1. Mappings                                           |rime-im-mappings|
+3. Configuration                                       |rime-im-configuration|
+
+==============================================================================
+DESCRIPTION                                              *rime-im-description*
+
+vim-rime-im is a plugin which allows you to use RIME (http://rime.im/) in vim.
+
+This plugin requires rime-cli (https://github.com/yyt16384/rime-cli) for
+interaction with RIME.
+
+==============================================================================
+USAGE                                                          *rime-im-usage*
+
+By default, <C-Space> is used to toggle the input method for current buffer.
+When the input method is enabled, typing any letter or some specific symbols
+will start RIME to input a phrase (see |g:rime_im_keys_to_map| for more
+details). Then all characters are sent to RIME until finishing this phrase.
+
+------------------------------------------------------------------------------
+MAPPINGS                                                    *rime-im-mappings*
+
+<Plug>(rime-im-enable)                                *<Plug>(rime-im-enable)*
+    Enable RIME for current buffer. Works in normal mode and insert mode.
+
+<Plug>(rime-im-disable)                              *<Plug>(rime-im-disable)*
+    Disable RIME for current buffer. Works in normal mode and insert mode.
+
+<Plug>(rime-im-toggle)                                *<Plug>(rime-im-toggle)*
+    Toggle RIME for current buffer. Works in normal mode and insert mode.
+    Default key binding: <C-Space>
+
+==============================================================================
+CONFIGURATION                                          *rime-im-configuration*
+
+rime-im can be configured with the following variables:
+
+g:rime_im_create_default_mappings          *g:rime_im_create_default_mappings*
+    If non-zero, default mappings are created.
+    Default: 1
+
+g:rime_im_keys_to_map                                  *g:rime_im_keys_to_map*
+    A list of characters to be captured. Typing any of these characters in
+    insert mode starts RIME to input a phrase.
+    Default: all lower-case letters and characters in ',.\'
+
+g:rime_im_rime_cli_prog                              *g:rime_im_rime_cli_prog*
+    The rime-cli executable file.
+    Default: "rime-cli"
+
+==============================================================================
+ vim: set filetype=help textwidth=78 expandtab norightleft:
