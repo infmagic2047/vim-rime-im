@@ -4,21 +4,6 @@ let s:rime_cli_prog = get(g:, 'rime_im_rime_cli_prog', 'rime-cli')
 
 let s:saved_mappings = {}
 
-function! s:keyevent_from_char(char) abort
-    " TODO: handle more keys
-    if type(a:char) == v:t_number
-        if a:char >= 0x20 && a:char <= 0x7e
-            return {'keysym': a:char, 'modifiers': 0}
-        endif
-    else
-        if a:char ==# "\<BS>"
-            return {'keysym': 0xff08, 'modifiers': 0}
-        endif
-    endif
-    " Unknown key
-    return {'keysym': 0, 'modifiers': 0}
-endfunction
-
 function! s:format_candidate(candidate) abort
     let l:label_str = type(a:candidate.label) == v:t_none ? '' : a:candidate.label . ': '
     let l:comment_str = type(a:candidate.comment) == v:t_none ? '' : ' ' . a:candidate.comment
@@ -69,7 +54,7 @@ function! s:start_im(initial_char) abort
     let l:current_char = a:initial_char
     let l:previous_preedit = ''
     while 1
-        let l:response = json_decode(ch_evalraw(s:rime_cli_job, json_encode(s:keyevent_from_char(l:current_char)) . "\n"))
+        let l:response = json_decode(ch_evalraw(s:rime_cli_job, json_encode(rime_im#keysym#keyevent_from_char(l:current_char)) . "\n"))
         if type(l:response) != v:t_none
             if type(l:response.commit) != v:t_none
                 let l:commit_text = l:response.commit.text
