@@ -8,15 +8,15 @@ function! s:keyevent_from_char(char) abort
     " TODO: handle more keys
     if type(a:char) == v:t_number
         if a:char >= 0x20 && a:char <= 0x7e
-            return {'keycode': a:char, 'modifiers': 0}
+            return {'keysym': a:char, 'modifiers': 0}
         endif
     else
         if a:char ==# "\<BS>"
-            return {'keycode': 0xff08, 'modifiers': 0}
+            return {'keysym': 0xff08, 'modifiers': 0}
         endif
     endif
     " Unknown key
-    return {'keycode': 0, 'modifiers': 0}
+    return {'keysym': 0, 'modifiers': 0}
 endfunction
 
 function! s:format_candidate(candidate) abort
