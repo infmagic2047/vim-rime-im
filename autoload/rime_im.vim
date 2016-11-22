@@ -28,15 +28,17 @@ endfunction
 function! s:show_preedit(text) abort
     " We cannot use setline() here because it breaks undo
     execute "normal! \"=a:text\<CR>P"
+    let l:len = strchars(a:text, 1)
+    if l:len >= 2
+        execute 'normal! ' . (l:len - 1) . 'h'
+    endif
 endfunction
 
 function! s:remove_preedit(text) abort
     " We cannot use setline() here because it breaks undo
     let l:len = strchars(a:text, 1)
-    if l:len >= 2
-        execute 'normal! ' . (l:len - 1) . '"_X"_x'
-    elseif l:len == 1
-        normal! "_x
+    if l:len >= 1
+        execute 'normal! ' . l:len . 'x'
     endif
 endfunction
 
