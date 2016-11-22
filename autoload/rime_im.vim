@@ -25,6 +25,21 @@ function! s:format_candidate(candidate) abort
     return l:label_str . a:candidate.text . l:comment_str
 endfunction
 
+function! s:show_preedit(text) abort
+    " We cannot use setline() here because it breaks undo
+    execute "normal! \"=a:text\<CR>P"
+endfunction
+
+function! s:remove_preedit(text) abort
+    " We cannot use setline() here because it breaks undo
+    let l:len = strchars(a:text, 1)
+    if l:len >= 2
+        execute 'normal! ' . (l:len - 1) . '"_X"_x'
+    elseif l:len == 1
+        normal! "_x
+    endif
+endfunction
+
 function! s:show_candidates(candidates) abort
     let l:items = []
     for l:c in a:candidates
@@ -40,12 +55,17 @@ endfunction
 
 function! s:start_im(initial_char) abort
     let l:completeopt_store = &completeopt
+    let l:virtualedit_store = &virtualedit
+    " Ensure the menu is shown
     set completeopt+=menuone
-    let l:line_content_orig = getline('.')
+    " Make :normal work when the cursor is one character past the end of
+    " the line
+    set virtualedit+=onemore
     if !exists('s:rime_cli_job')
         let s:rime_cli_job = job_start([s:rime_cli_prog])
     endif
     let l:current_char = a:initial_char
+    let l:previous_preedit = ''
     while 1
         let l:response = json_decode(ch_evalraw(s:rime_cli_job, json_encode(s:keyevent_from_char(l:current_char)) . "\n"))
         if type(l:response) != v:t_none
@@ -53,10 +73,11 @@ function! s:start_im(initial_char) abort
                 let l:commit_text = l:response.commit.text
                 break
             endif
+            call s:remove_preedit(l:previous_preedit)
+            let l:previous_preedit = ''
             if type(l:response.composition) != v:t_none
-                call setline('.', l:line_content_orig . l:response.composition.preedit)
-            else
-                call setline('.', l:line_content_orig)
+                call s:show_preedit(l:response.composition.preedit)
+                let l:previous_preedit = l:response.composition.preedit
             endif
             if type(l:response.menu) != v:t_none
                 call s:show_candidates(l:response.menu.candidates)
@@ -67,8 +88,9 @@ function! s:start_im(initial_char) abort
         endif
         let l:current_char = getchar()
     endwhile
-    call setline('.', l:line_content_orig)
+    call s:remove_preedit(l:previous_preedit)
     let &completeopt = l:completeopt_store
+    let &virtualedit = l:virtualedit_store
     return l:commit_text
 endfunction
 
