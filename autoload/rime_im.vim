@@ -75,12 +75,14 @@ function! s:start_im(initial_char) abort
                 let l:commit_text = l:response.commit.text
                 break
             endif
-            call s:remove_preedit(l:previous_preedit)
-            let l:previous_preedit = ''
-            if type(l:response.composition) != v:t_none
-                call s:show_preedit(l:response.composition.preedit)
-                let l:previous_preedit = l:response.composition.preedit
+            if type(l:response.composition) == v:t_none
+                " All entered characters are erased. Exit input method.
+                let l:commit_text = ''
+                break
             endif
+            call s:remove_preedit(l:previous_preedit)
+            call s:show_preedit(l:response.composition.preedit)
+            let l:previous_preedit = l:response.composition.preedit
             if type(l:response.menu) != v:t_none
                 call s:show_candidates(l:response.menu.candidates)
             else
@@ -91,6 +93,10 @@ function! s:start_im(initial_char) abort
         let l:current_char = getchar()
     endwhile
     call s:remove_preedit(l:previous_preedit)
+    if pumvisible()
+        " Finally hide the popup menu
+        call feedkeys("\<C-E>", 'n')
+    endif
     let &completeopt = l:completeopt_store
     let &virtualedit = l:virtualedit_store
     return l:commit_text
