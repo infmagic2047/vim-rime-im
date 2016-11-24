@@ -1,3 +1,8 @@
+if get(g:, 'loaded_rime_im', 0)
+    finish
+endif
+let g:loaded_rime_im = 1
+
 inoremap <silent> <unique> <expr> <Plug>(rime-im-enable) rime_im#enable()
 inoremap <silent> <unique> <expr> <Plug>(rime-im-disable) rime_im#disable()
 inoremap <silent> <unique> <expr> <Plug>(rime-im-toggle) rime_im#toggle()
