@@ -78,7 +78,7 @@ function! s:start_im(initial_char) abort
         let l:current_char = getchar()
     endwhile
     call s:remove_preedit(l:previous_preedit)
-    if pumvisible()
+    if pumvisible() && l:commit_text == ''
         " Finally hide the popup menu
         call feedkeys("\<C-E>", 'n')
     endif
