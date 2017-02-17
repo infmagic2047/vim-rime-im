@@ -13,7 +13,7 @@ DESCRIPTION                                              *rime-im-description*
 
 vim-rime-im is a plugin which allows you to use RIME (http://rime.im/) in vim.
 
-This plugin requires rime-cli (https://github.com/yyt16384/rime-cli) for
+This plugin requires rime-cli (https://github.com/infmagic2047/rime-cli) for
 interaction with RIME.
 
 ==============================================================================
