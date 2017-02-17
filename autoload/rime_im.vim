@@ -23,7 +23,7 @@ function! s:remove_preedit(text) abort
     " We cannot use setline() here because it breaks undo
     let l:len = strchars(a:text, 1)
     if l:len >= 1
-        execute 'normal! ' . l:len . 'x'
+        execute 'normal! "_' . l:len . 'x'
     endif
 endfunction
 
